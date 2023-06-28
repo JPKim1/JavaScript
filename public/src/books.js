@@ -21,21 +21,23 @@ function partitionBooksByBorrowedStatus(books) {
   return combinedArray
 }
 
+function findAccountId(id, accounts) {
+  return accounts.find(account => account.id === id);
+}
+
 function getBorrowersForBook(book, accounts) {
   let listOfAcc = []
   let borrows = book.borrows
   let iteration = borrows.length <= 10 ? borrows.length : 10
+  
   for (let i = 0; i < iteration; i++) {
     let curId = borrows[i].id
     let curStatus = borrows[i].returned
-    for (let j = 0; j < accounts.length; j++) {
-      let curAccId = accounts[j].id
-      let corAcc = {}
-      if (curId === curAccId) {
-        corAcc = accounts[j]
-        corAcc.returned = curStatus
-        listOfAcc.push(corAcc)
-      }
+    let corAcc = findAccountId(curId, accounts)
+    
+    if (corAcc) {
+      corAcc.returned = curStatus
+      listOfAcc.push(corAcc)
     }
   }
   return listOfAcc
